@@ -1,0 +1,74 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#!/home">Home</a></li>
+                <li><a href="#!/billing">Billing</a></li>
+                <li  class="active"><a href="#!/service">Service & maintenance</a></li>
+                <li><a href="#!/reports">Reports <span class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/dashboard">Communication Dashboard</a></li>
+    </ol>
+    <div>
+        <h4 style="text-align: center; font-weight: bold;">Communication Status </h4>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th class="col-md-1" style="text-align: center;">Building</th>
+                    <th class="col-md-1"style="text-align: center;">ID</th>
+                    <th class="col-md-2" style="text-align: center;">Connections</th>
+                    <th class="col-md-2" style="text-align: center;">Transponders</th>
+                    <th class="col-md-2" style="text-align: center;">Meters</th>
+                    <th class="col-md-2" style="text-align: center;">Status/th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="building in buildings">
+                    <td><a ng-href="#!/buildings/{{building.Id}}/connections/{{connection.Id}}">{{building.Address}},{{building.City}},{{building.State}}<</a></td>
+                    <td><span ng-if="connection.Method != 'IP'">&mdash;</span>{{building.Id}}/td>
+                    <td><span ng-if="connection.Method != 'IP'">&mdash;</span>{{connection.IpPort}}</td>
+                    <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemNumber}}</td>
+                    <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemBaudRate}}</td>
+                    <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemDataBits}}</td>
+                    <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemParity}}</td>
+                    <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemStopBit}}</td>
+                    <td>{{connection.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                </tr>
+                <tr ng-show="loading.buildings">
+                    <td colspan="6"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                </tr>
+                <tr ng-show="(buildings.length == 0) && (!loading.buildings)">
+                    <td colspan="6">No Buildings</td>
+                </tr>            
+            </tbody>
+        </table>        
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#!/reads">Readings <span class="sr-only">(current)</span></a></li>
+                <li><a href="#!/meters">Meters</a></li>
+                <li><a href="#!/buildings">Buildings</a></li>
+                <li><a href="#!/users">Users</a></li>
+                <li><a href="#!/reports">Reports</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li><a href="#!/reads">Readings</a></li>
+        <li class="active">Import</li>
+    </ol>
+    
+    <form name="form_import" ng-submit="import()" novalidate autocomplete="off">
+        <div class="form-group">
+            <label for="import_csv">CSV to Import (copy and paste from text editor)</label>
+            <textarea class="form-control" id="import_csv" ng-model="import.csv" ng-disabled="working.save" rows="10" required autofocus></textarea>
+            <p class="help-block">Must resemble:<br /><pre>CreatedAt,KwH,MeterId<br />2018-01-01 12:02pm,1234,1<br />2018-01-02 12:03pm,1245,2<br />2018-01-03 8:00pm,1267,3</pre></p>
+            <p><em>or</em></p>
+            <p class="help-block"><pre>CreatedAt,KwH,SerialNumber<br />2018-01-01 12:02pm,1234,51267237623<br />2018-01-02 12:03pm,1245,932892323<br />2018-01-03 8:00pm,1267,9278232323</pre></p>
+        </div>
+        <hr />
+        <button type="submit" class="btn btn-primary" ng-disabled="working.save">Import <i class="fa fa-spinner fa-spin fa-fw" ng-show="working.save"></i></button>
+        <a href="#!/reads" class="btn btn-default" ng-disabled="working.save">Cancel</a>
+    </form>
+
+    <footer style="margin-top: 10%;">
+        <hr />
+        <p class="text-right text-muted"><small>&copy; Copyright 2018 QuadLogic Controls Corporation<br />Connected to {{baseUrl}}</small></p>
+    </footer>
+</div>

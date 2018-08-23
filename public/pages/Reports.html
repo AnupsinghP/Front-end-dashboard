@@ -1,0 +1,55 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#!/queries">Query Log</a></li>
+                <li><a href="#!/buildings">Buildings</a></li>
+                <li><a href="#!/users">Users</a></li>
+                <li class="active"><a href="#!/reports">Reports <span class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li class="active">Reports</li>
+    </ol>
+
+    <ul class="list-unstyled list-reports">
+        <li><a href="http://40.121.70.123/ReportServer/Pages/ReportViewer.aspx?%2fMeters+without+Readings&rs:Command=Render" target="_blank">Meters without Readings</a></li>
+        <li><a href="http://40.121.70.123/ReportServer/Pages/ReportViewer.aspx?%2fTransponders+without+Meters&rs:Command=Render" target="_blank">Transponders without Meters</a></li>
+        <li><a href="http://40.121.70.123/ReportServer/Pages/ReportViewer.aspx?%2fQueries+with+Errors&rs:Command=Render" target="_blank">Queries with Errors</a></li>
+        <li><a href="http://40.121.70.123/ReportServer/Pages/ReportViewer.aspx?%2fQueries+with+Status&rs:Command=Render" target="_blank">Queries with Status</a></li>
+        <li><a href="http://40.121.70.123/ReportServer/Pages/ReportViewer.aspx?%2fReadings+for+Meter&rs:Command=Render" target="_blank">Readings for Meter</a></li>
+    </ul>
+
+    <footer style="margin-top: 10%;">
+        <hr />
+        <p class="text-right text-muted"><small>&copy; Copyright 2018 QuadLogic Controls Corporation<br />Connected to {{baseUrl}}</small></p>
+    </footer>
+</div>

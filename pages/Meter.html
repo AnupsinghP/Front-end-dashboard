@@ -1,0 +1,149 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+  
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#!/queries">Query Log</a></li>
+                <li class="active"><a href="#!/buildings">Buildings <span class="sr-only">(current)</span></a></li>
+                <li><a href="#!/users">Users</a></li>
+                <li><a href="#!/reports">Reports</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li><a href="#!/buildings">Buildings</a></li>
+        <li><a ng-href="#!/buildings/{{building.Id}}">{{building.Address}}</a></li>
+        <li class="active">{{breadcrumb}} Meter</li>
+    </ol>
+    
+    <div class="row">
+        <div class="col-md-5">
+            <h3>Meter Details</h3>
+            <form ng-submit="save()" novalidate autocomplete="off">
+                <div class="form-group">
+                    <label for="meter_serial_number">Serial Number</label>
+                    <input type="text" class="form-control" id="meter_serial_number" ng-model="meter.SerialNumber" ng-disabled="working.save" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="meter_account_number">Account Number</label>
+                    <input type="text" class="form-control" id="meter_account_number" ng-model="meter.AccountNumber" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_installed_at">Installed</label>
+                    <input type="date" class="form-control" id="meter_installed_at" ng-model="meter.InstalledAt" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_removed_at">Removed</label>
+                    <input type="date" class="form-control" id="meter_removed_at" ng-model="meter.RemovedAt" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_series">Series</label>
+                    <input type="text" class="form-control" id="meter_series" ng-model="meter.Series" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_frequency">Frequency</label>
+                    <input type="text" class="form-control" id="meter_frequency" ng-model="meter.Frequency" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_volts">Volts</label>
+                    <input type="text" class="form-control" id="meter_volts" ng-model="meter.Volts" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_description">Description</label>
+                    <input type="text" class="form-control" id="meter_description" ng-model="meter.Description" ng-disabled="working.save">
+                </div>
+                <div class="form-group">
+                    <label for="meter_password">Password</label>
+                    <input type="text" class="form-control" id="meter_password" ng-model="meter.Password" ng-disabled="working.save">
+                </div>
+                <hr />
+                <button type="submit" class="btn btn-primary" ng-disabled="working.save">Save <i class="fa fa-spinner fa-spin fa-fw" ng-show="working.save"></i></button>
+                <a ng-href="#!/buildings/{{building.Id}}" class="btn btn-default" ng-disabled="working.save">Cancel</a>
+                <a ng-click="delete()" class="btn btn-danger pull-right" ng-show="building.Id" ng-disabled="working.save">Delete</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="row" ng-show="meter.Id">
+        <div class="col-md-12">
+            <h3>Readings for this Meter</h3>
+            <div class="row row-toolbar">
+                <div class="col-md-6">
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group pull-right" role="group">
+                            <button type="button" class="btn btn-default" ng-click="refreshReadings()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-2">kWh</th>
+                        <th class="col-md-2">kW</th>
+                        <th class="col-md-2">Channel</th>
+                        <th class="col-md-3">Read</th>
+                        <th class="col-md-3">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="reading in readings">
+                        <td>{{reading.kWh}}</td>
+                        <td>{{reading.kW}}</td>
+                        <td>{{reading.Channel}}</td>
+                        <td>{{reading.ReadAt | date : 'MM-dd-yyyy'}}</td>
+                        <td>{{reading.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                    </tr>
+                    <tr ng-show="loading.readings">
+                        <td colspan="5"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                    </tr>
+                    <tr ng-show="(readings.length == 0) && (!loading.readings)">
+                        <td colspan="5">No Meter Readings</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-sm btn-default" ng-click="readingsPrevious()" ng-show="readingsCount > 20"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    <button class="btn btn-sm btn-default" ng-click="readingsNext()" ng-show="readingsCount > 20"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <p class="form-control-static" ng-hide="((readings.length == 0) && (!loading.readings)) || loading.readings">{{readingsStart()}} to {{readingsEnd()}} of {{readingsCount}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 10%;">
+        <hr />
+        <p class="text-right text-muted"><small>&copy; Copyright 2018 QuadLogic Controls Corporation<br />Connected to {{baseUrl}}</small></p>
+    </footer>
+</div>

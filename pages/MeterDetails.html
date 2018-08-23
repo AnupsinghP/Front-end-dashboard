@@ -1,0 +1,126 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#!/home">Home</a></li>
+                <li><a href="#!/billing">Billing</a></li>
+                <li class="active"><a href="#!/service">Service & maintenance</a></li>
+                <li><a href="#!/reports">Reports <span class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/home">Communication Dashboard</a></li>
+        <li class="active"><a href="#!/bldgovrvw">Meter Details</a></li>
+    </ol>
+   <div class="row">
+        <div class="col-md-5">
+            <h3>Meter Details</h3>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-12">
+        <table class="table table-bordered table-condensed" style="border-top-color: red; border-width: 3px;">
+            <tr>
+                <thead>
+                    <th class="col-md-1" style="text-align: center;">Serial No.</th>
+                    <th class="col-md-1" style="text-align: center;">Series</th>
+                    <th class="col-md-1" style="text-align: center;">Location</th>
+                    <th class="col-md-1" style="text-align: center;">Installed</th>              
+                    <th class="col-md-2" style="text-align: center;">Connection</th>
+                    <th class="col-md-2" style="text-align: center;">Transponder</th>
+                    <th class="col-md-2" style="text-align: center;">Connection Status</th>
+                    <th class="col-md-2" style="text-align: center;">Notes</th>   
+                </thead>
+            </tr>
+            <tr>
+                <td style="text-align: center;">{{meter.SerialNumber}}</td>
+                <td style="text-align: center;">{{meter.Series}}</td>
+                <td style="text-align: center;">{{meter.Location}}</td>
+                <td style="text-align: center;">{{meter.InstalledAt}}</td>
+                <td style="text-align: center;"><a ng-href="#!/buildings/{{Connections.BuildingId}}/connections/{{Connections.Id}}">{{Connections.Method}}</td>
+                <td style="text-align: center;"><a ng-href="#!/connections/{{Connections.Method}}/transponders/{{meter.TransponderId}}">{{Transponder.SerialNumber}}</td>
+                <td style="text-align: center;">{{readings.status}}</td>
+                <td style="text-align: center;">{{meter.Notes}}</td>
+            </tr>
+        </table>    
+    </div>
+    </div>
+    <hr>
+    <div class="row" ng-show="meter.Id">
+        <div class="col-md-12">
+            <h3>Readings for this Meter</h3>
+            <div class="row row-toolbar">
+                <div class="col-md-6">
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group pull-right" role="group">
+                            <button type="button" class="btn btn-default" ng-click="refreshReadings()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-2" style="text-align: center;">kWh</th>
+                        <th class="col-md-2" style="text-align: center;">kW</th>
+                        <th class="col-md-2" style="text-align: center;">Channel</th>
+                        <th class="col-md-3" style="text-align: center;">Read</th>
+                        <th class="col-md-3" style="text-align: center;">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="reading in readings">
+                        <td style="text-align: center;">{{reading.kWh}}</td>
+                        <td style="text-align: center;">{{reading.kW}}</td>
+                        <td style="text-align: center;">{{reading.Channel}}</td>
+                        <td style="text-align: center;">{{reading.ReadAt | date : 'MM-dd-yyyy'}}</td>
+                        <td style="text-align: center;">{{reading.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                    </tr>
+                    <tr ng-show="loading.readings">
+                        <td colspan="5"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                    </tr>
+                    <tr ng-show="(readings.length == 0) && (!loading.readings)">
+                        <td colspan="5">No Meter Readings</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-sm btn-default" ng-click="readingsPrevious()" ng-show="readingsCount > 20"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    <button class="btn btn-sm btn-default" ng-click="readingsNext()" ng-show="readingsCount > 20"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <p class="form-control-static" ng-hide="((readings.length == 0) && (!loading.readings)) || loading.readings">{{readingsStart()}} to {{readingsEnd()}} of {{readingsCount}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

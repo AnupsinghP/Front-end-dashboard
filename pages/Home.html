@@ -1,0 +1,180 @@
+<style>
+    .tab {
+    overflow: hidden;
+    background-color: #ffffff;
+    }
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 18px;
+        font-weight: 200;
+        font-family: Calibri;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: #f9ecf2;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+        background-color: #ccc;
+    }
+
+    .wrapper{
+  position: relative;
+    }
+
+    .firstDiv, .secondDiv{
+    position: absolute;
+    }
+
+   .custom-select {
+  position: relative;
+  font-family: Arial;
+}
+.custom-select select {
+  display: none; /*hide original SELECT element:*/
+}
+.select-selected {
+  background-color: white;
+}
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+/*style the items (options), including the selected item:*/
+.select-items div,.select-selected {
+  color: #ffffff;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+  user-select: none;
+}
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: DodgerBlue;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#!/home">Home</a></li>
+                <li><a href="#!/billing">Billing</a></li>
+                <li><a href="#!/service">Service & maintenance</a></li>
+                <li><a href="#!/reports">Reports <span class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container" ng-controller="NavigationController">
+    <ol class="breadcrumb">
+        <li class="active"><a href="#!/home">Search</a></li>
+    </ol>
+    <div>
+        <div class="tab" style="margin-left: 20%; margin-right: 20%">
+            <button style="border: none;" id="siteBtn" ng-click="ShowSiteSeach()">Site Seach</button>
+            <button style="border: none;" id="sernoBtn" ng-click="ShowSernoSeach()">Advance Search</button>
+        </div>
+    </div>
+    <div class="wrapper">
+    <div style="margin-left: 20%; height: 340px; width: 800px; border: groove; z-index: 1;" {{ShowSiteSearch}} class="firstDiv" id="siteSeach">
+         <form class="form-inline" novalidate autocomplete="off" style="margin-top: 10%">
+            <div class="form-group" style="margin-left: 5%; margin-top: 2%">
+                            <h3 style="color: #00334d">Search Site</h3>
+            </div>
+           <div class="form-group" style="margin-left: 5%; margin-top: 2%">
+                <input class="form-control" type="text" name="searchBox" ng-model="searchString" ng-change="textChanged()" placeholder="Enter the address" style="height: 35px;" /> <!--ng-model="searchString"  placeholder="Enter the address"/>-->
+          </div> 
+            <div class="form-group" style="margin-left: 5%; margin-top: 2%">
+                    <a style="text-decoration: none; color: ##004080; font-size: 20px" href="#!/viewAll">View all</a>
+            </div>
+        </form>
+
+        <div id="sampleDiv" hidden>
+        <ul style="height: 150px; overflow: hidden;list-style-type: none; margin-left: 25%;width: 300px;">
+            <li ng-repeat="bldg in items | searchFor: searchString">
+                 <a ng-href="#!/bldgovrvw/{{bldg.Id}}" style="font-size: large; text-decoration: none;">{{bldg.Address}}</a>
+            </li>    
+        </ul>
+        </div>
+    </div>
+    <div style="margin-left: 20%; height: 340px; width: 800px; border: groove;" class="secondDiv" id="sernoSearch">
+        <form class="form-inline" novalidate autocomplete="off" style="margin-top: 10%">
+              <div class="form-group" style="margin-left: 5%">
+                     <h3 style="color: #00334d">Search By ID: <h3>
+              </div>
+             <div class="form-group" style="margin-left: 5%;">
+                  <select class="form-control"  id="dropdownChoices" style="width: 200px;">
+                     <option value="Building">Choose option..</option>
+                    <option value="Building">Building</option>
+                    <option value="Tranponder">Tranponder</option>
+                    <option value="Bridge">Bridge</option>
+                    <option value="Meter">Meter</option>
+                    <option value="Connection">Connection</option>
+                </select>
+            </div>
+             <div class="form-group" style="margin-left: 5%;">
+                <input class="form-control" type="text" name="searchBox" style="width: 150px" ng-model="serno" 
+                placeholder="ID / Serial Number"/>
+          </div>
+        </form>
+            <button type="submit" class="btn btn-primary" ng-disabled="working.login" style="margin-left: 29%; margin-top: 2%; width: 200px;" ng-click="SearchSerno()" >Search<i class="fa fa-spinner fa-spin fa-fw" ng-show="working.login"></i></button>
+    </div>
+</div>
+</div>

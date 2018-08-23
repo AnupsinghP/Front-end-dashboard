@@ -1,0 +1,179 @@
+<style>
+div{
+    font-size: 13px;
+}
+</style>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#!/home">Home</a></li>
+                <li><a href="#!/billing">Billing</a></li>
+                <li class="active"><a href="#!/service">Service & maintenance</a></li>
+                <li><a href="#!/reports">Reports <span class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/home">Communication Dashboard</a></li>
+        <li class="active"><a href="#!/bldgovrvw">Building Details</a></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-5">
+            <h3>Building Details</h3>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-12">
+        <table class="table table-bordered table-condensed" style="border-top-color: red; border-width: 3px;">
+            <tr>
+                <thead>
+                    <th class="col-md-1">Address</th>
+                    <th class="col-md-1">City</th>
+                    <th class="col-md-1">State</th>
+                    <th class="col-md-2">Zip-code</th>   
+                </thead>
+            </tr>
+            <tr>
+                <td>{{building.Address}}</td>
+                <td>{{building.City}}</td>
+                <td>{{building.State}}</td>
+                <td>{{building.PostalCode}}</td>
+            </tr>
+        </table>    
+    </div>
+     </div>
+     <hr>
+    <div>
+        <h3>Connections Details</h3>
+        <div class="row">
+            <div class="col-md-12">
+            <table class="table table-bordered table-condensed" style="border-top-color: red;border-width: 3px;">
+                <thead>
+                    <tr>
+                        <th class="col-md-1">Method</th>
+                        <th class="col-md-2">IP Address</th>
+                        <th class="col-md-1">IP Port</th>
+                        <th class="col-md-2">PSTN Number</th>
+                        <th class="col-md-1">Baud Rate</th>
+                        <th class="col-md-1">Data Bits</th>
+                        <th class="col-md-1">Parity</th>
+                        <th class="col-md-1">Stop Bit</th>
+                        <th class="col-md-2">Created</th>
+                    </tr>
+                </thead>
+                <tbody style="border-color: blue;">
+                    <tr ng-repeat="connection in connections">
+                        <td><a ng-href="#!/buildings/{{building.Id}}/connections/{{connection.Id}}">{{connection.Method}}</a></td>
+                        <td><span ng-if="connection.Method != 'IP'">&mdash;</span>{{connection.IpAddress}}</td>
+                        <td><span ng-if="connection.Method != 'IP'">&mdash;</span>{{connection.IpPort}}</td>
+                        <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemNumber}}</td>
+                        <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemBaudRate}}</td>
+                        <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemDataBits}}</td>
+                        <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemParity}}</td>
+                        <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemStopBit}}</td>
+                        <td>{{connection.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                    </tr>
+                    <tr ng-show="loading.connections">
+                        <td colspan="9"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                    </tr>
+                    <tr ng-show="(connections.length == 0) && (!loading.connections)">
+                        <td colspan="9">No Connections</td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+           <div class="col-md-9">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="group" role="group">
+                            <button type="button" style="align-content: right;" class="btn btn-default" ng-click="refreshConnections()"><i class="fa fa-refresh" aria-hidden="true"></i> <a style="text-decoration: none;">Refresh Connection</a></button>
+                             <a ng-href="#!/buildings/{{building.Id}}/connections/new" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"></i> Add Connection</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+                <h3>Transponders Details</h3>
+                <table class="table table-bordered table-condensed" style="border-top-color: red;border-width: 3px;">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">Serial Number</th>
+                            <th class="col-md-2">Days to Log</th>
+                            <th class="col-md-2">Memory</th>
+                            <th class="col-md-2">Slots</th>
+                            <th class="col-md-2">Volts</th>
+                            <th class="col-md-2">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="transponder in transponders">
+                            <td><a ng-href="#!/connections/{{transponder.ConnectionId}}/transponders/{{transponder.Id}}">{{transponder.SerialNumber}}</a></td>
+                            <td>{{transponder.DaysToLog}}</td>
+                            <td>{{transponder.Memory}}</td>
+                            <td>{{transponder.Slots}}</td>
+                            <td>{{transponder.Volts}}</td>
+                            <td>{{transponder.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                        </tr>
+                        <tr ng-show="loading.transponders">
+                            <td colspan="6"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                        </tr>
+                        <tr ng-show="(transponders.length == 0) && (!loading.transponders)">
+                            <td colspan="6">No Transponders</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                <div class="col-md-9">
+                    <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" role="group">
+                                <form class="form-inline" novalidate autocomplete="off">
+                                    <div class="form-group">
+                                         <button type="button" class="btn btn-default" ng-click="refreshTransponders()"><i class="fa fa-refresh" aria-hidden="true"></i> <a style="text-decoration: none;">Refresh Transponders</a></button>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="selected.Connection" ng-options="connection as connection.Method === 'IP' ? ('IP - ' + connection.IpAddress) : ('Modem - ' + connection.ModemNumber) for connection in connections"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <a ng-href="#!/connections/{{selected.Connection.Id}}/transponders/new" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"></i> Add Transponder</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+        </div>
+        <hr />        
+    <div class="row">
+        <div class="col-md-9">
+            <h3>Meter reading statistics</h3>
+        </div>
+    </div>
+    <canvas id="countries" width="600" height="400"></canvas>
+        
+</div>
+

@@ -1,0 +1,18 @@
+body {
+    padding-top: 70px;
+    overflow-y: scroll;
+}
+
+.row-toolbar {
+    margin-bottom: 10px;
+}
+
+h3 { margin-bottom: 25px; }
+
+ul.list-reports { margin-top: 40px; margin-bottom: 40px; font-size: 18px; }
+ul.list-reports li { margin-top: 10px; margin-bottom: 10px; }
+
+.mainLabel {
+	font-family: Arial, sans-serif;
+	font-size: 50;
+}

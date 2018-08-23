@@ -1,0 +1,109 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#!/queries">Query Log <span class="sr-only">(current)</span></a></li>
+                <li><a href="#!/buildings">Buildings</a></li>
+                <li><a href="#!/users">Users</a></li>
+                <li><a href="#!/reports">Reports</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li><a href="#!/queries">Query Log</a></li>
+        <li class="active">{{query.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</li>
+    </ol>
+    
+    <div class="row row-toolbar">
+        <div class="col-md-6">
+            <div class="btn-toolbar" role="toolbar">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group pull-right" role="group">
+                    <button type="button" class="btn btn-default" ng-click="refreshQuery()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-10">
+            <h3>Query Details</h3>
+            <form novalidate autocomplete="off">
+                <div class="form-group">
+                    <label for="query_id">ID</label>
+                    <input type="text" class="form-control" id="query_id" ng-model="query.Id" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="query_instance_id">Instance ID (PID, Process ID)</label>
+                    <input type="text" class="form-control" id="query_instance_id" ng-model="query.InstanceId" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="query_hostname">Hostname</label>
+                    <input type="text" class="form-control" id="query_hostname" ng-model="query.Hostname" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="query_connection">Connection</label>
+                    <input type="text" class="form-control" id="query_connection" ng-value="connectionName(query)" disabled>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a href="#!/buildings/{{query.Connection.Building.Id}}">
+                            {{query.Connection.Building.Address}}
+                            <br />
+                            {{query.Connection.Building.City}} {{query.Connection.Building.State}}, {{query.Connection.Building.PostalCode}}
+                        </a>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="query_status">Status</label>
+                    <input type="text" class="form-control" id="query_status" ng-model="query.Status" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Errors</label>
+                    <ul class="list-unstyled">
+                        <li ng-repeat="error in errors">{{error}}</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="query_log">Log</label>
+                    <div ng-bind-html="log" style="font-family: monospace; font-size: 10px;"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer style="margin-top: 10%;">
+        <hr />
+        <p class="text-right text-muted"><small>&copy; Copyright 2018 QuadLogic Controls Corporation<br />Connected to {{baseUrl}}</small></p>
+    </footer>
+</div>

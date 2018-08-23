@@ -1,0 +1,309 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+  
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#!/queries">Query Log</a></li>
+                <li class="active"><a href="#!/buildings">Buildings <span class="sr-only">(current)</span></a></li>
+                <li><a href="#!/users">Users</a></li>
+                <li><a href="#!/reports">Reports</a></li>
+                <li><a href="#!/home">Home</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/dashboard">Dashboard</a></li>
+        <li><a href="#!/buildings">Buildings</a></li>
+        <li class="active">{{breadcrumb}} Building</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-md-5">
+            <h3>Building Details</h3>
+            <form ng-submit="save()" novalidate autocomplete="off">
+                <div class="form-group">
+                    <label for="building_address">Address</label>
+                    <input type="text" class="form-control" id="building_address" ng-model="building.Address" ng-disabled="working.save" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="building_city">City</label>
+                    <input type="text" class="form-control" id="building_city" ng-model="building.City" ng-disabled="working.save" required>
+                </div>
+                <div class="form-group">
+                    <label for="building_state">State</label>
+                    <input type="text" class="form-control" id="building_state" ng-model="building.State" ng-disabled="working.save" maxlength="2" required>
+                </div>
+                <div class="form-group">
+                    <label for="building_postal_code">Postal Code</label>
+                    <input type="text" class="form-control" id="building_postal_code" ng-model="building.PostalCode" ng-disabled="working.save" required>
+                </div>
+                <hr />
+                <button type="submit" class="btn btn-primary" ng-disabled="working.save">Save <i class="fa fa-spinner fa-spin fa-fw" ng-show="working.save"></i></button>
+                <a href="#!/buildings" class="btn btn-default" ng-disabled="working.save">Cancel</a>
+                <a ng-click="delete()" class="btn btn-danger pull-right" ng-show="building.Id" ng-disabled="working.save">Delete</a>
+            </form>
+        </div>
+    </div>
+
+    <div ng-hide="!building.Id">
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Connections for this Building</h3>
+                <div class="row row-toolbar">
+                    <div class="col-md-6">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" role="group">
+                                <a ng-href="#!/buildings/{{building.Id}}/connections/new" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"></i> Add Connection</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group pull-right" role="group">
+                                <button type="button" class="btn btn-default" ng-click="refreshConnections()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1">Method</th>
+                            <th class="col-md-2">IP Address</th>
+                            <th class="col-md-1">IP Port</th>
+                            <th class="col-md-2">PSTN Number</th>
+                            <th class="col-md-1">Baud Rate</th>
+                            <th class="col-md-1">Data Bits</th>
+                            <th class="col-md-1">Parity</th>
+                            <th class="col-md-1">Stop Bit</th>
+                            <th class="col-md-2">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="connection in connections">
+                            <td><a ng-href="#!/buildings/{{building.Id}}/connections/{{connection.Id}}">{{connection.Method}}</a></td>
+                            <td><span ng-if="connection.Method != 'IP'">&mdash;</span>{{connection.IpAddress}}</td>
+                            <td><span ng-if="connection.Method != 'IP'">&mdash;</span>{{connection.IpPort}}</td>
+                            <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemNumber}}</td>
+                            <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemBaudRate}}</td>
+                            <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemDataBits}}</td>
+                            <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemParity}}</td>
+                            <td><span ng-if="connection.Method != 'Modem'">&mdash;</span>{{connection.ModemStopBit}}</td>
+                            <td>{{connection.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                        </tr>
+                        <tr ng-show="loading.connections">
+                            <td colspan="9"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                        </tr>
+                        <tr ng-show="(connections.length == 0) && (!loading.connections)">
+                            <td colspan="9">No Connections</td>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Meters for this Building</h3>
+                <div class="row row-toolbar">
+                    <div class="col-md-6">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" role="group">
+                                <form class="form-inline" novalidate autocomplete="off">
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="selected.Connection" ng-options="connection as connection.Method === 'IP' ? ('IP - ' + connection.IpAddress) : ('Modem - ' + connection.ModemNumber) for connection in connections"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <a ng-href="#!/connections/{{selected.Connection.Id}}/meters/new" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"></i> Add Meter</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group pull-right" role="group">
+                                <button type="button" class="btn btn-default" ng-click="refreshMeters()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-md-4">Serial</th>
+                            <th class="col-md-4">Transponder</th>
+                            <th class="col-md-4">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="meter in meters">
+                            <td><a href="#!/connections/{{meter.ConnectionId}}/meters/{{meter.Id}}">{{meter.SerialNumber}}</a></td>
+                            <td>{{meter.Transponder.SerialNumber}}</td>
+                            <td>{{meter.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                        </tr>
+                        <tr ng-show="loading.meters">
+                            <td colspan="3"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                        </tr>
+                        <tr ng-show="(meters.length == 0) && (!loading.meters)">
+                            <td colspan="3">No Meters</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-default" ng-click="metersPrevious()" ng-show="metersCount > 20"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        <button class="btn btn-sm btn-default" ng-click="metersNext()" ng-show="metersCount > 20"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <p class="form-control-static" ng-hide="((meters.length == 0) && (!loading.meters)) || loading.meters">{{metersStart()}} to {{metersEnd()}} of {{metersCount}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Transponders for this Building</h3>
+                <div class="row row-toolbar">
+                    <div class="col-md-6">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" role="group">
+                                <form class="form-inline" novalidate autocomplete="off">
+                                    <div class="form-group">
+                                        <select class="form-control" ng-model="selected.Connection" ng-options="connection as connection.Method === 'IP' ? ('IP - ' + connection.IpAddress) : ('Modem - ' + connection.ModemNumber) for connection in connections"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <a ng-href="#!/connections/{{selected.Connection.Id}}/transponders/new" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"></i> Add Transponder</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group pull-right" role="group">
+                                <button type="button" class="btn btn-default" ng-click="refreshTransponders()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">Serial Number</th>
+                            <th class="col-md-2">Days to Log</th>
+                            <th class="col-md-2">Memory</th>
+                            <th class="col-md-2">Slots</th>
+                            <th class="col-md-2">Volts</th>
+                            <th class="col-md-2">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="transponder in transponders">
+                            <td><a ng-href="#!/connections/{{transponder.ConnectionId}}/transponders/{{transponder.Id}}">{{transponder.SerialNumber}}</a></td>
+                            <td>{{transponder.DaysToLog}}</td>
+                            <td>{{transponder.Memory}}</td>
+                            <td>{{transponder.Slots}}</td>
+                            <td>{{transponder.Volts}}</td>
+                            <td>{{transponder.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                        </tr>
+                        <tr ng-show="loading.transponders">
+                            <td colspan="6"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                        </tr>
+                        <tr ng-show="(transponders.length == 0) && (!loading.transponders)">
+                            <td colspan="6">No Transponders</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-default" ng-click="transpondersPrevious()" ng-show="transpondersCount > 20"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        <button class="btn btn-sm btn-default" ng-click="transpondersNext()" ng-show="transpondersCount > 20"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <p class="form-control-static" ng-hide="((transponders.length == 0) && (!loading.transponders)) || loading.transponders">{{transpondersStart()}} to {{transpondersEnd()}} of {{transpondersCount}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Queries for this Building</h3>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="width: 4%;">ID</th>
+                            <th style="width: 6%;">Hostname</th>
+                            <th style="width: 15%;">Connection</th>
+                            <th style="width: 15%;">Status</th>
+                            <th style="width: 5%;">Errors</th>
+                            <th style="width: 5%;">Busy</th>
+                            <th style="width: 5%;">Imported</th>
+                            <th style="width: 15%;">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="query in queries">
+                            <td>{{query.Id}}</td>
+                            <td>{{query.Hostname}}</td>
+                            <td><a href="#!/queries/{{query.Id}}">{{query.Connection.Method}} &ndash; {{query.Connection.IpAddress}} {{query.Connection.ModemNumber}}</a></td>
+                            <td>{{query.Status}}</td>
+                            <td><span ng-show="errorLength(query) > 0">{{errorLength(query)}}</span></td>
+                            <td class="text-center"><i class="fa fa-check" aria-hidden="true" ng-if="query.IsBusy"></i></td>
+                            <td class="text-center"><i class="fa fa-check" aria-hidden="true" ng-if="query.IsImportComplete"></i></td>
+                            <td>{{query.CreatedAt | date : 'MM-dd-yyyy h:mm:ssa' : '-0400'}}</td>
+                        </tr>
+                        <tr ng-show="loading.queries">
+                            <td colspan="8"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+                        </tr>
+                        <tr ng-show="(queries.length == 0) && (!loading.queries)">
+                            <td colspan="8">No Queries</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-default" ng-click="queriesPrevious()" ng-show="queriesCount > 20"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        <button class="btn btn-sm btn-default" ng-click="queriesNext()" ng-show="queriesCount > 20"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <p class="form-control-static" ng-hide="((queries.length == 0) && (!loading.queries)) || loading.queries">{{queriesStart()}} to {{queriesEnd()}} of {{queriesCount}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 10%;">
+        <hr />
+        <p class="text-right text-muted"><small>&copy; Copyright 2018 QuadLogic Controls Corporation<br />Connected to {{baseUrl}}</small></p>
+    </footer>
+</div>

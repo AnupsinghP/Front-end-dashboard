@@ -1,0 +1,74 @@
+<html ng-app>
+    <head>
+    <script src="node_modules/angular/angular.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link href="/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </head>
+    <!--
+    <body>
+       <nav class="navbar navbar-default navbar-fixed-top">
+            <img src="/img/logo.png" alt="Logo" 
+                style="height: 65px; float: left; margin-right: 10px; margin-left: 20%; margin-top: 1%; margin-bottom: 0.5%"/>
+            <h1 style="font-family: Merriweather; margin-left: 40%; margin-top: 1.5%;">QuadLogic Controls Corp.</h1>
+        </nav>
+       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="margin-top: 1%; background-color: #a6a6a6;%" >
+                <ul class="nav navbar-nav">
+                    <li><a href="#!/queries" style="font-size: 20px; color: #00001a;">Home</a></li>
+                    <li><a href="#!/buildings" style="font-size: 20px; color: black;">Buildings</a></li>
+                    <li><a href="#!/users" style="font-size: 20px; color: black;">Users</a></li>
+                    <li><a href="#!/reports" style="font-size: 20px; color: black">Reports</a></li>
+                </ul>
+            <ul class="nav navbar-default navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </body>
+-->
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Application name</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+{% block content %}{% endblock %}
+        <hr/>
+        <footer>
+            <p>&copy; {{ year }} - My Django Application</p>
+        </footer>
+    </div>
+
+    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+{% block scripts %}{% endblock %}
+
+</body>
+</html>
+
+</html>

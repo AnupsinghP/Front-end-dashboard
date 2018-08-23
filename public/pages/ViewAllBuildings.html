@@ -1,0 +1,73 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#!/dashboard">
+                <img src="/img/logo.png" alt="Logo" style="height: 20px; float: left; margin-right: 10px;"/> <strong>SILO</strong>
+            </a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#!/home">Home</a></li>
+                <li><a href="#!/billing">Billing</a></li>
+                <li><a href="#!/service">Service & maintenance</a></li>
+                <li><a href="#!/reports">Reports <span class="sr-only">(current)</span></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello, {{current.user.Name}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#!/account">Account</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="#!/home">Communication Dashboard</a></li>
+        <li class="active"><a href="#!/viewAll">View All Buildings</a></li>
+    </ol>
+
+        <table class="table table-bordered table-condensed">
+       <thead>
+            <tr>
+                <th class="col-md-3">Address</th>
+                <th class="col-md-3">City</th>
+                <th class="col-md-2">State</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="building in buildings">
+                <td><a href="#!/bldgovrvw/{{building.Id}}">{{building.Address}}</a></td>
+                <td><a href="#!/bldgovrvw/{{building.Id}}">{{building.City}}</a></td>
+                <td><a href="#!/bldgovrvw/{{building.Id}}">{{building.State}}</a></td>
+            </tr>
+            <tr ng-show="loading.buildings">
+                <td colspan="4"><i class="fa fa-spinner fa-spin fa-fw"></i></td>
+            </tr>
+            <tr ng-show="(buildings.length == 0) && (!loading.buildings)">
+                <td colspan="4">No Buildings</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-sm btn-default" ng-click="buildingsPrevious()" ng-show="buildingsCount > 20"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+            <button class="btn btn-sm btn-default" ng-click="buildingsNext()" ng-show="buildingsCount > 20"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+        <div class="col-md-6 text-right">
+            <p class="form-control-static" ng-hide="((buildings.length == 0) && (!loading.buildings)) || loading.buildings">{{buildingsStart()}} to {{buildingsEnd()}} of {{buildingsCount}}</p>
+        </div>
+    </div>    
+</div>
