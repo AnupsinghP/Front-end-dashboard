@@ -28,6 +28,8 @@ Built on Angular, the console consists of JavaScript "controllers" and
 HTML "views" which allow users to manage buildings, connections, meters,
 transponders, and users.
 
+It is built using AngularJS, JavaScript, CSS and HTML
+
 
 ## SILO script
 
